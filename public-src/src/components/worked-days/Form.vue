@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="form-group">
-      <label for="month">Months</label>
+      <label for="month">Month</label>
       <input id="month" type="month" v-model="month">
     </div>
     <div class="form-group">
@@ -16,14 +16,18 @@
 </template>
 
 <script>
-  import {db} from '../../firebase';
-  import moment from 'moment';
-
   export default {
     data() {
       return {
         month: '',
-        workedDays: 0
+        workedDays: ''
+      }
+    },
+    methods: {
+      cancel() {
+        this.$router.push({name: 'ls-worked-days'})
+      },
+      save() {
       }
     }
   }

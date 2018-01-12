@@ -9,26 +9,16 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>November 2017</td>
-        <td>21 days</td>
-        <td><i class="fa fa-pencil-square-o"></i></td>
-      </tr>
-      <tr>
-        <td>December 2017</td>
-        <td>20 days</td>
-        <td><i class="fa fa-pencil-square-o"></i></td>
-      </tr>
-      <tr>
-        <td>January 2018</td>
-        <td>22 days</td>
-        <td><i class="fa fa-pencil-square-o"></i></td>
+      <tr v-for="row in rows">
+        <td>{{row.month}}</td>
+        <td>{{row.workedDays}} days</td>
+        <td><i class="fa fa-pencil-square-o" @click="edit(row.key)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
-        <td>2 months</td>
-        <td>63 days</td>
+        <td>{{months}} months</td>
+        <td>{{days}} days</td>
         <td></td>
       </tr>
       </tfoot>
@@ -39,3 +29,40 @@
     </router-link>
   </main>
 </template>
+
+<script>
+  import moment from 'moment'
+  import {keys, sum, values} from 'ramda'
+
+  export default {
+    data() {
+      return {
+        workedDays: {
+          '201711': 21,
+          '201712': 20
+        }
+      }
+    },
+    computed: {
+      rows() {
+        return keys(this.workedDays).map(key => ({
+          key,
+          month: moment(key, 'YYYYMM').format('MMMM YYYY'),
+          workedDays: this.workedDays[key]
+        }))
+      },
+      months() {
+        return keys(this.workedDays).length
+      },
+      days() {
+        return sum(values(this.workedDays))
+      }
+    }
+    ,
+    methods: {
+      edit(id) {
+        this.$router.push({name: 'ed-worked-days', params: { id }})
+      }
+    }
+  }
+</script>

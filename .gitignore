@@ -2,3 +2,4 @@
 .idea
 **/node_modules/
 public/ifollow.js
+public/ifollow.js.map

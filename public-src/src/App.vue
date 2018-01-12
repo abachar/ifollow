@@ -1,12 +1,38 @@
 <template>
-  <div class="container">
-    <h1>
-      <router-link to="/">ifollow</router-link>
-      <i class="fa fa-table"></i>
-    </h1>
-    <router-view></router-view>
+  <div class="container" :class="{ open: isHistoryShown }">
+    <history @hide="hideHistory" />
+    <div class="">
+      <h1>
+        <i class="fa fa-list" @click="showHistory"></i>
+        <router-link to="/">ifollow</router-link>
+      </h1>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
+
+<script>
+  import History from './components/History.vue';
+
+  export default {
+    components: {
+      history: History
+    },
+    data() {
+      return {
+        isHistoryShown: false
+      }
+    },
+    methods: {
+      showHistory() {
+        this.isHistoryShown = true
+      },
+      hideHistory() {
+        this.isHistoryShown = false
+      }
+    }
+  }
+</script>
 
 <style lang="scss">
   html, body, .container {
@@ -22,7 +48,6 @@
     padding: .8rem;
     color: #fff;
     line-height: 1em;
-    position: relative;
 
     a {
       color: #fff;
@@ -30,10 +55,8 @@
     }
 
     .fa {
-      font-size: 1rem;
-      position: absolute;
-      top: 1.2rem;
-      right: .8rem;
+      font-size: 1.4rem;
+      margin-right: .8rem;
     }
   }
 
@@ -62,6 +85,10 @@
       label {
         line-height: 1rem;
         padding: .4rem 0;
+
+        input {
+          display: inline-block;
+        }
       }
 
       input {
@@ -142,5 +169,9 @@
       0 1px 5px 0 rgba(0, 0, 0, 0.12),
       0 3px 1px -2px rgba(0, 0, 0, 0.2);
     }
+  }
+
+  .container {
+    position: relative;
   }
 </style>

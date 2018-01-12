@@ -4,71 +4,86 @@
       <div class="overview">
         <div class="left">
           <dl>
-            <dt>Chiffre d'affaires</dt>
-            <dd>20 249
-              <small>EUR</small>
-            </dd>
+            <dt>turnover</dt>
+            <dd>{{overview.turnover}} <small>EUR</small></dd>
           </dl>
           <dl>
-            <dt>Frais de gestion</dt>
-            <dd>456
-              <small>EUR</small>
-            </dd>
+            <dt>management fees</dt>
+            <dd>{{overview.managementFees}} <small>EUR</small></dd>
           </dl>
           <dl>
-            <dt>Encaissé</dt>
-            <dd>20 249
-              <small>EUR</small>
-            </dd>
+            <dt>cashed</dt>
+            <dd>{{overview.cashed}} <small>EUR</small></dd>
           </dl>
         </div>
         <div class="right">
           <dl>
-            <dt>Trésorerie</dt>
-            <dd>12 245
-              <small>EUR</small>
-            </dd>
+            <dt>treasury</dt>
+            <dd>{{overview.treasury}} <small>EUR</small></dd>
           </dl>
           <dl>
-            <dt>Bénéfice brut</dt>
-            <dd>25 342
-              <small>EUR</small>
-            </dd>
+            <dt>estimated gross margin</dt>
+            <dd>{{overview.estimatedGrossMargin}} <small>EUR</small></dd>
           </dl>
         </div>
       </div>
     </header>
     <router-link class="card" to="/worked-days">
-      <label>21
-        <small>JOURS</small>
-      </label>
-      <p>travaillés</p>
+      <label>{{workedDays}}  <small>DAYS</small></label>
     </router-link>
-    <router-link class="card mountain-meadow" to="/expense-report">
-      <label><span class="red">2</span> / 5</label>
-      <p>notes de frais</p>
-    </router-link>
+      <router-link class="card mountain-meadow" to="/expense">
+        <label><span class="red">{{paidExpenses}}</span> out of {{totalExpenses}}</label>
+      </router-link>
     <router-link class="card white-smoke" to="/salary">
-      <label>21 954
-        <small>EUR</small>
-      </label>
-      <p>salaire</p>
+      <label>{{salary}} <small>EUR</small></label>
     </router-link>
-    <router-link class="card" to="/overtime">
-      <label>23
-        <small>HEURES</small>
-      </label>
-      <p>supplémentaires</p>
-    </router-link>
+      <router-link class="card" to="/overtime">
+        <label>{{overtime}} <small>EUR</small></label>
+      </router-link>
   </main>
 </template>
+
+<script>
+  import numeral from 'numeral'
+
+  export default {
+    data() {
+      return {
+        workedDays: 41
+      }
+    },
+    computed: {
+      overview() {
+        return {
+          turnover: numeral(20249).format(),
+          managementFees: numeral(456).format(),
+          cashed: numeral(20249).format(),
+          treasury: numeral(12245).format(),
+          estimatedGrossMargin: numeral(25342).format()
+        }
+      },
+      salary() {
+        return numeral(21954).format()
+      },
+      paidExpenses() {
+        return 2
+      },
+      totalExpenses() {
+        return 5
+      },
+      overtime() {
+        return numeral(3000).format()
+      }
+    }
+  }
+</script>
 
 <style lang="scss" scoped>
   main {
     display: grid;
     padding: 0;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 40vw 40vw;
+    grid-template-rows: auto 42vw 42vw;
     grid-gap: 1px;
 
     header {

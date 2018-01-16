@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <table>
       <thead>
       <tr>
@@ -9,16 +9,16 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows">
+      <tr v-for="row in rows" :key="row.id">
         <td>{{row.month}}</td>
         <td>{{row.workedDays}} days</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.key)"></i></td>
+        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td>{{months}} months</td>
-        <td>{{days}} days</td>
+        <td>{{days}} days<br />{{billed}} euros</td>
         <td></td>
       </tr>
       </tfoot>
@@ -31,38 +31,32 @@
 </template>
 
 <script>
-  import moment from 'moment'
-  import {keys, sum, values} from 'ramda'
+  import {workedDaysAsList, formattedBilledWorkedDays, totalWorkedDays, loadWorkedDays} from "../../functions";
 
   export default {
     data() {
       return {
-        workedDays: {
-          '201711': 21,
-          '201712': 20
-        }
+        loading: true,
+        workedDays: null
       }
     },
     computed: {
-      rows() {
-        return keys(this.workedDays).map(key => ({
-          key,
-          month: moment(key, 'YYYYMM').format('MMMM YYYY'),
-          workedDays: this.workedDays[key]
-        }))
-      },
-      months() {
-        return keys(this.workedDays).length
-      },
-      days() {
-        return sum(values(this.workedDays))
-      }
-    }
-    ,
+      rows()   { return workedDaysAsList(this.workedDays) },
+      months() { return this.rows.length },
+      days()   { return totalWorkedDays(this.workedDays) },
+      billed() { return formattedBilledWorkedDays(this.workedDays) }
+    },
     methods: {
       edit(id) {
-        this.$router.push({name: 'ed-worked-days', params: { id }})
+        this.$router.push({name: 'ed-worked-days', params: {id}})
       }
+    },
+    created() {
+      loadWorkedDays()
+        .then(workedDays => {
+          this.loading = false;
+          this.workedDays = workedDays;
+        });
     }
   }
 </script>

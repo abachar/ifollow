@@ -1,8 +1,8 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <div class="form-group">
-      <label for="transactionDate">Transaction date</label>
-      <input id="transactionDate" type="date" v-model="transactionDate">
+      <label for="reportedAt">Reported at</label>
+      <input id="reportedAt" type="datetime-local" v-model="reportedAt">
     </div>
     <div class="form-group">
       <label for="label">Label</label>
@@ -32,12 +32,16 @@
 </template>
 
 <script>
+  import {db} from '../../firebase'
+
   export default {
     data() {
       return {
-        transactionDate: '',
-        label: '',
-        amount: '',
+        loading: true,
+        id: null,
+        reportedAt: null,
+        label: null,
+        amount: null,
         billable: false,
         paid: false
       }
@@ -47,6 +51,31 @@
         this.$router.push({name: 'ls-expense'})
       },
       save() {
+        const id = this.$route.params.id;
+        const dbRef = db.ref(`/expense-reports`);
+
+        (id ? dbRef.child(id).set(this.form) : dbRef.push(this.form))
+          .then(() => this.$router.push({name: 'ls-expense'}))
+      }
+    },
+    created() {
+      if (this.$route.params.id) {
+        db.ref(`/expenses/${this.$route.params.id}`)
+          .once('value')
+          .then(snapshot => snapshot.val())
+          .then(({reportedAt, label, amount, paid, billable}) => {
+            this.loading = false;
+            this.id = this.$route.params.id;
+            this.reportedAt = reportedAt;
+            this.label = label;
+            this.amount = amount;
+            this.paid = paid;
+            this.billable = billable;
+          });
+      }
+      else {
+        this.loading = false;
+        this.id = uuid()
       }
     }
   }

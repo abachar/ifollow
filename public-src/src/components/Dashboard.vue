@@ -1,79 +1,64 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <header>
       <div class="overview">
         <div class="left">
           <dl>
             <dt>turnover</dt>
-            <dd>{{overview.turnover}} <small>EUR</small></dd>
+            <dd>{{dashboard.overview.turnover}} <small>EUR</small></dd>
           </dl>
           <dl>
             <dt>management fees</dt>
-            <dd>{{overview.managementFees}} <small>EUR</small></dd>
+            <dd>{{dashboard.overview.managementFees}} <small>EUR</small></dd>
           </dl>
           <dl>
             <dt>cashed</dt>
-            <dd>{{overview.cashed}} <small>EUR</small></dd>
+            <dd>{{dashboard.overview.cashed}} <small>EUR</small></dd>
           </dl>
         </div>
         <div class="right">
           <dl>
             <dt>treasury</dt>
-            <dd>{{overview.treasury}} <small>EUR</small></dd>
+            <dd>{{dashboard.overview.treasury}} <small>EUR</small></dd>
           </dl>
           <dl>
             <dt>estimated gross margin</dt>
-            <dd>{{overview.estimatedGrossMargin}} <small>EUR</small></dd>
+            <dd>{{dashboard.overview.estimatedGrossMargin}} <small>EUR</small></dd>
           </dl>
         </div>
       </div>
     </header>
     <router-link class="card" to="/worked-days">
-      <label>{{workedDays}}  <small>DAYS</small></label>
+      <label>{{dashboard.workedDays}}  <small>DAYS</small></label>
     </router-link>
       <router-link class="card mountain-meadow" to="/expense">
-        <label><span class="red">{{paidExpenses}}</span> out of {{totalExpenses}}</label>
+        <label><span class="red">{{dashboard.expenses.paid}}</span> out of {{dashboard.expenses.count}}</label>
       </router-link>
     <router-link class="card white-smoke" to="/salary">
-      <label>{{salary}} <small>EUR</small></label>
+      <label>{{dashboard.salaries}} <small>EUR</small></label>
     </router-link>
       <router-link class="card" to="/overtime">
-        <label>{{overtime}} <small>EUR</small></label>
+        <label>{{dashboard.overtimes}} <small>EUR</small></label>
       </router-link>
   </main>
 </template>
 
 <script>
-  import numeral from 'numeral'
+  import {loadDashboard} from "../functions";
 
   export default {
     data() {
       return {
-        workedDays: 41
+        loading: true,
+        dashboard: {overview: {}, expenses: {}}
       }
     },
-    computed: {
-      overview() {
-        return {
-          turnover: numeral(20249).format(),
-          managementFees: numeral(456).format(),
-          cashed: numeral(20249).format(),
-          treasury: numeral(12245).format(),
-          estimatedGrossMargin: numeral(25342).format()
-        }
-      },
-      salary() {
-        return numeral(21954).format()
-      },
-      paidExpenses() {
-        return 2
-      },
-      totalExpenses() {
-        return 5
-      },
-      overtime() {
-        return numeral(3000).format()
-      }
+    created() {
+      loadDashboard()
+        .then(dashboard => {
+          this.loading = false;
+          this.dashboard = dashboard;
+        });
     }
   }
 </script>
@@ -85,6 +70,7 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 42vw 42vw;
     grid-gap: 1px;
+    height: calc(100vh - 57px);
 
     header {
       grid-column: 1 / 3;

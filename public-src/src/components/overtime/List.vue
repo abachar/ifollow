@@ -1,23 +1,26 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <table>
       <thead>
       <tr>
-        <th>Time slot</th>
+        <th>Month</th>
+        <th>Worked days</th>
         <th>Amount</th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows">
-        <td>{{row.formattedFrom}}<br/>{{row.formattedTo}}</td>
+      <tr v-for="row in rows" :key="row.id">
+        <td>{{row.month}}</td>
+        <td>{{row.workedDays}}</td>
         <td>{{row.amount}} euro</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.key)"></i></td>
+        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td></td>
+        <td>{{sumOfWorkedDays}}</td>
         <td>{{sumOfAmounts}} euro</td>
         <td></td>
       </tr>
@@ -31,39 +34,31 @@
 </template>
 
 <script>
-  import numeral from 'numeral'
-  import moment from 'moment'
-  import {sum, map} from 'ramda'
+  import {countOfOvertimeWorkedDays, loadOvertimes, overtimesAsList, formattedTotalOfOvertimeAmount} from "../../functions";
 
   export default {
     data() {
       return {
-        overtimes: [
-          {
-            from: '2017-11-18T10:00:00+01:00',
-            to: '2017-11-18T23:00:00+01:00'
-          }
-        ]
+        loading: true,
+        overtimes: null
       }
     },
     computed: {
-      rows() {
-        return map(o => ({
-          key: '',
-          formattedFrom: moment(o.from).format('DD/MM/YYYY HH:mm'),
-          formattedTo: moment(o.to).format('DD/MM/YYYY HH:mm'),
-          amount: 0 // numeral(this.salaries[key]).format()
-        }), this.overtimes)
-      },
-      sumOfAmounts() {
-        return numeral(sum(map(r => r.amount, this.rows))).format()
-      }
-    }
-    ,
+      rows() { return overtimesAsList(this.overtimes) },
+      sumOfWorkedDays() { return countOfOvertimeWorkedDays(this.overtimes) },
+      sumOfAmounts() { return formattedTotalOfOvertimeAmount(this.overtimes) }
+    },
     methods: {
       edit(id) {
-        this.$router.push({name: 'ed-salary', params: { id }})
+        this.$router.push({name: 'ed-overtime', params: {id}})
       }
+    },
+    created() {
+      loadOvertimes()
+        .then(overtimes => {
+          this.loading = false;
+          this.overtimes = overtimes;
+        });
     }
   }
 </script>

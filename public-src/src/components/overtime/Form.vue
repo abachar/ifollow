@@ -1,14 +1,16 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <div class="form-group">
-      <label for="fromDate">From</label>
-      <input id="fromDate" type="date" v-model="fromDate">
-      <input type="time" v-model="fromTime">
+      <label for="month">Month</label>
+      <input id="month" type="month" v-model="month">
     </div>
     <div class="form-group">
-      <label for="toDate">To</label>
-      <input id="toDate" type="date" v-model="toDate">
-      <input type="time" v-model="toTime">
+      <label for="worked-days">Worked days</label>
+      <input id="worked-days" type="number" v-model="workedDays">
+    </div>
+    <div class="form-group">
+      <label>Amount</label>
+      <p>{{ amount }}</p>
     </div>
     <div class="form-btn-group">
       <button @click="cancel">Cancel</button>
@@ -18,13 +20,20 @@
 </template>
 
 <script>
+  import {db} from '../../firebase'
+
   export default {
     data() {
       return {
-        fromDate: '',
-        fromTime: '',
-        toDate: '',
-        toTime: ''
+        loading: true,
+        id: null,
+        month: '',
+        workedDays: ''
+      }
+    },
+    computed: {
+      amount() {
+        return this.workedDays * 750
       }
     },
     methods: {
@@ -32,6 +41,31 @@
         this.$router.push({name: 'ls-overtime'})
       },
       save() {
+        db.ref('/overtimes')
+          .child(this.id)
+          .set({
+            month: this.month,
+            workedDays:  parseInt(this.workedDays),
+            amount: parseInt(this.amount)
+          })
+          .then(() => this.$router.push({name: 'ls-overtime'}))
+      }
+    },
+    created() {
+      if (this.$route.params.id) {
+        db.ref(`/overtimes/${this.$route.params.id}`)
+          .once('value')
+          .then(snapshot => snapshot.val())
+          .then(({month, workedDays}) => {
+            this.loading = false;
+            this.id = this.$route.params.id;
+            this.month = month;
+            this.workedDays = workedDays;
+          });
+      }
+      else {
+        this.loading = false;
+        this.id = uuid()
       }
     }
   }

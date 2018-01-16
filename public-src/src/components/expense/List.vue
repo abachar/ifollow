@@ -1,26 +1,28 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <table>
       <thead>
       <tr>
         <th></th>
+        <th>Reported At</th>
         <th>Label</th>
         <th>Amount</th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows">
-        <td><i class="fa fa-check" v-if="row.isPaid"></i></td>
-        <td>{{row.label}}<br /><small>{{row.transactionDate}}</small></td>
+      <tr v-for="row in rows" :key="row.id">
+        <td><i class="fa fa-check" v-if="row.paid"></i></td>
+        <td>{{row.reportedAt}}</small></td>
+        <td>{{row.label}}</td>
         <td>{{row.amount}} euro</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.key)"></i></td>
+        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
-        <td></td>
-        <td>{{paid}} out of {{countOfExpenses}}</td>
+        <td colspan="2"></td>
+        <td>{{countOfPaid}} out of {{countOfExpenses}}</td>
         <td colspan="2">{{paidAmount}} out of {{totalAmount}} euro</td>
       </tr>
       </tfoot>
@@ -33,59 +35,37 @@
 </template>
 
 <script>
-  import numeral from 'numeral'
-  import moment from 'moment'
-  import {filter, map, sum} from 'ramda'
+  import {
+    countOfExpenses, countOfPaidExpenses, expensesAsList, formattedTotalOfPaidExpenses, loadExpenses,
+    totalOfExpenses
+  } from "../../functions";
 
   export default {
     data() {
       return {
-        expenses: [
-          {
-            amount: 629,
-            billable: true,
-            'is-paid': false,
-            label: 'Hotel',
-            'transaction-date': '2017-11-24'
-          },
-          {
-            amount: 70,
-            billable: false,
-            'is-paid': true,
-            label: 'Facutre Awani',
-            'transaction-date': '2017-11-01'
-          }
-        ]
+        loading: true,
+        expenses: null
       }
     },
     computed: {
-      rows() {
-        return map((expense, index) => ({
-          ...expense,
-          key: index,
-          isPaid: expense['is-paid'],
-          amount: numeral(expense.amount).format(),
-          transactionDate:moment(expense['transaction-date']).format('DD/MM/YYYY'),
-        }), this.expenses)
-      },
-      paid() {
-        return filter(e => e['is-paid'], this.expenses).length
-      },
-      countOfExpenses() {
-        return this.expenses.length
-      },
-      paidAmount() {
-        return sum(map(e => e.amount, filter(e => e['is-paid'], this.expenses)))
-      },
-      totalAmount() {
-        return sum(map(e => e.amount, this.expenses))
-      }
+      rows() { return expensesAsList(this.expenses) },
+      countOfPaid() { return countOfPaidExpenses(this.expenses) },
+      countOfExpenses() { return countOfExpenses(this.expenses) },
+      paidAmount() { return formattedTotalOfPaidExpenses(this.expenses) },
+      totalAmount() { return totalOfExpenses(this.expenses) }
     }
     ,
     methods: {
       edit(id) {
         this.$router.push({name: 'ed-expense', params: { id }})
       }
+    },
+    created() {
+      loadExpenses()
+        .then(expenses => {
+          this.loading = false;
+          this.expenses = expenses;
+        });
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main :class="{ loading }">
     <table>
       <thead>
       <tr>
@@ -9,10 +9,10 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows">
+      <tr v-for="row in rows" :key="row.id">
         <td>{{row.month}}</td>
         <td>{{row.salary}} euro</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.key)"></i></td>
+        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
@@ -31,38 +31,32 @@
 </template>
 
 <script>
-  import numeral from 'numeral'
-  import moment from 'moment'
-  import {keys, sum, values} from 'ramda'
+  import {loadSalaries, salariesAsList, formattedTotalOfSalaries} from "../../functions";
 
   export default {
     data() {
       return {
-        salaries: {
-          '201711': 10988
-        }
+        loading: true,
+        salaries: null
       }
     },
     computed: {
-      rows() {
-        return keys(this.salaries).map(key => ({
-          key,
-          month: moment(key, 'YYYYMM').format('MMMM YYYY'),
-          salary: numeral(this.salaries[key]).format()
-        }))
-      },
-      months() {
-        return keys(this.salaries).length
-      },
-      sumOfSalaries() {
-        return numeral(sum(values(this.salaries))).format()
-      }
+      rows() { return salariesAsList(this.salaries) },
+      months() { return this.rows.length },
+      sumOfSalaries() { return formattedTotalOfSalaries(this.salaries) }
     }
     ,
     methods: {
       edit(id) {
         this.$router.push({name: 'ed-salary', params: { id }})
       }
+    },
+    created() {
+      loadSalaries()
+        .then(salaries => {
+          this.loading = false;
+          this.salaries = salaries;
+        });
     }
   }
 </script>

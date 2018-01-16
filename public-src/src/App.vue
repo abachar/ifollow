@@ -1,38 +1,13 @@
 <template>
-  <div class="container" :class="{ open: isHistoryShown }">
-    <history @hide="hideHistory" />
+  <div class="container">
     <div class="">
       <h1>
-        <i class="fa fa-list" @click="showHistory"></i>
         <router-link to="/">ifollow</router-link>
       </h1>
       <router-view></router-view>
     </div>
   </div>
 </template>
-
-<script>
-  import History from './components/History.vue';
-
-  export default {
-    components: {
-      history: History
-    },
-    data() {
-      return {
-        isHistoryShown: false
-      }
-    },
-    methods: {
-      showHistory() {
-        this.isHistoryShown = true
-      },
-      hideHistory() {
-        this.isHistoryShown = false
-      }
-    }
-  }
-</script>
 
 <style lang="scss">
   html, body, .container {
@@ -72,7 +47,20 @@
   main {
     color: #16a085;
     padding: 1rem;
-    height: calc(100vh - 57px);
+    height: calc(100vh - 93px);
+
+    &.loading {
+      position: relative;
+      &::before {
+        content: "Loading...";
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: white;
+        z-index: 1;
+        text-align: center;
+        padding-top: 10vh;
+      }
+    }
 
     .form-group {
       display: grid;

@@ -13,5 +13,8 @@ const config = {
 // Initialize firebase application
 const app = firebase.initializeApp(config);
 
+// Apply the default browser preference
+firebase.auth().useDeviceLanguage();
+
 // Get database
 export const db = app.database();

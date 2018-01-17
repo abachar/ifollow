@@ -23,6 +23,7 @@
 
 <script>
   import {db} from '../../firebase'
+  import uuid from 'uuid-v4'
 
   export default {
     data() {

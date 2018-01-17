@@ -7,7 +7,10 @@ import moment from 'moment'
 import {and, compose, filter, length, map, multiply, prop, propEq, sort, sum, toPairs, values} from 'ramda'
 import {db} from './firebase'
 
-export const AVERAGE_DAILY_RATE = 750;
+// Configure numeral
+import 'numeral/locales/fr';
+numeral.locale('fr');
+
 export const MANAGEMENT_FEES_RATE = 0.03;
 
 // Helper functions

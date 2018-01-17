@@ -60,10 +60,15 @@
         this.$router.push({name: 'ls-expense'})
       },
       save() {
-        const id = this.$route.params.id;
-        const dbRef = db.ref(`/expense-reports`);
-
-        (id ? dbRef.child(id).set(this.form) : dbRef.push(this.form))
+        db.ref('/expenses')
+          .child(this.id)
+          .set({
+            reportedAt: this.reportedAt,
+            label: this.label,
+            amount: parseInt(this.amount),
+            paid: this.paid,
+            billable: this.billable
+          })
           .then(() => this.$router.push({name: 'ls-expense'}))
       }
     },

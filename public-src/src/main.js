@@ -14,8 +14,7 @@ import ListOfOvertimes from './components/overtime/List.vue';
 
 // Sign in with a pop-up window
 firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-  .then(function (result) {
-    console.log('Authenticated with google', result);
+  .then(() => {
 
     // Install router & fire modules
     Vue.use(VueRouter);

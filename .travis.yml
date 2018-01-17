@@ -13,6 +13,7 @@ before_script:
 
 script:
   - cd public-src
+  - npm i
   - npm run build
 
 after_success:

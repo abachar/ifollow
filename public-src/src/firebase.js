@@ -18,3 +18,6 @@ firebase.auth().useDeviceLanguage();
 
 // Get database
 export const db = app.database();
+
+// Get a reference to the storage service
+export const storage = firebase.storage().ref();

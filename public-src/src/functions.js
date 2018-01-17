@@ -4,7 +4,7 @@
  */
 import numeral from 'numeral'
 import moment from 'moment'
-import {and, compose, filter, length, map, multiply, prop, propEq, sum, toPairs, values} from 'ramda'
+import {and, compose, filter, length, map, multiply, prop, propEq, sort, sum, toPairs, values} from 'ramda'
 import {db} from './firebase'
 
 export const AVERAGE_DAILY_RATE = 750;
@@ -80,7 +80,8 @@ const pairToExpense = ([id, e]) => ({
 });
 
 // Convert expenses object to list
-export const expensesAsList = compose(map(pairToExpense), toPairs);
+const compareExpense = (a, b) => moment(a.reportedAt, 'DD/MM/YYYY HH:mm').diff(moment(b.reportedAt, 'DD/MM/YYYY HH:mm'));
+export const expensesAsList = compose(sort(compareExpense), map(pairToExpense), toPairs);
 
 export const countOfExpenses = compose(length, values);
 

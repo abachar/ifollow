@@ -1,37 +1,33 @@
 <template>
-  <main :class="{ loading }">
+  <div :class="{ loading }">
+    <h1>List of expenses</h1>
+
     <table>
       <thead>
       <tr>
-        <th></th>
         <th>Reported At</th>
         <th>Label</th>
         <th>Amount</th>
-        <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows" :key="row.id">
-        <td><i class="fa fa-check" v-if="row.paid"></i></td>
+      <tr v-for="row in rows" :key="row.id" @click="edit(row.id)" :class="{'non-billable': !row.billable, unpaid: !row.paid}">
         <td>{{row.reportedAt}}</small></td>
         <td>{{row.label}}</td>
         <td>{{row.amount}} euro</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
-        <td colspan="2"></td>
+        <td></td>
         <td>{{countOfPaid}} out of {{countOfExpenses}}</td>
-        <td colspan="2">{{paidAmount}} out of {{totalAmount}} euro</td>
+        <td>{{paidAmount}} out of {{totalAmount}} euro</td>
       </tr>
       </tfoot>
     </table>
 
-    <router-link class="fab" :to="{name: 'nw-expense'}">
-      <i class="fa fa-plus"></i>
-    </router-link>
-  </main>
+    <router-link class="fab-new" :to="{name: 'nw-expense'}"></router-link>
+  </div>
 </template>
 
 <script>
@@ -69,3 +65,16 @@
     }
   }
 </script>
+
+<style lang="scss">
+  tr {
+    &.non-billable {
+      text-decoration: underline;
+    }
+
+    &.unpaid {
+      color: #ea183a;
+    }
+  }
+
+</style>

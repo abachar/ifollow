@@ -1,5 +1,7 @@
 <template>
-  <main :class="{ loading }">
+  <div :class="{ loading }">
+    <h1>Edit salary</h1>
+
     <div class="form-group">
       <label for="month">Month</label>
       <input id="month" type="month" v-model="month">
@@ -12,7 +14,7 @@
       <button @click="cancel">Cancel</button>
       <button class="primary" @click="save">Save</button>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>

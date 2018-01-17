@@ -1,5 +1,7 @@
 <template>
-  <main :class="{ loading }">
+  <div :class="{ loading }">
+    <h1>Edit expense</h1>
+
     <div class="form-group">
       <label for="reportedAt">Reported at</label>
       <input id="reportedAt" type="datetime-local" v-model="reportedAt">
@@ -14,13 +16,19 @@
     </div>
     <div class="form-group">
       <label>
-        <input type="checkbox" v-model="billable">
+        <div class="switch">
+          <input type="checkbox" v-model="billable">
+          <div class="switch-bg"></div>
+        </div>
         Is billable
       </label>
     </div>
     <div class="form-group">
       <label>
-        <input type="checkbox" v-model="paid">
+        <div class="switch">
+          <input type="checkbox" v-model="paid">
+          <div class="switch-bg"></div>
+        </div>
         Is paid
       </label>
     </div>
@@ -28,7 +36,7 @@
       <button @click="cancel">Cancel</button>
       <button class="primary" @click="save">Save</button>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>

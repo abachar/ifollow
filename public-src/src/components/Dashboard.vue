@@ -1,38 +1,36 @@
 <template>
-  <main :class="{ loading }">
-    <header>
-      <div class="overview">
-        <div class="left">
-          <dl>
-            <dt>turnover</dt>
-            <dd>{{dashboard.overview.turnover}} <small>EUR</small></dd>
-          </dl>
-          <dl>
-            <dt>management fees</dt>
-            <dd>{{dashboard.overview.managementFees}} <small>EUR</small></dd>
-          </dl>
-          <dl>
-            <dt>cashed</dt>
-            <dd>{{dashboard.overview.cashed}} <small>EUR</small></dd>
-          </dl>
-        </div>
-        <div class="right">
-          <dl>
-            <dt>treasury</dt>
-            <dd>{{dashboard.overview.treasury}} <small>EUR</small></dd>
-          </dl>
-          <dl>
-            <dt>estimated gross margin</dt>
-            <dd>{{dashboard.overview.estimatedGrossMargin}} <small>EUR</small></dd>
-          </dl>
-        </div>
+  <div class="dashboard" :class="{ loading }">
+    <div class="overview">
+      <div class="left">
+        <dl>
+          <dt>turnover</dt>
+          <dd>{{dashboard.overview.turnover}} <small>EUR</small></dd>
+        </dl>
+        <dl>
+          <dt>management fees</dt>
+          <dd>{{dashboard.overview.managementFees}} <small>EUR</small></dd>
+        </dl>
+        <dl>
+          <dt>cashed</dt>
+          <dd>{{dashboard.overview.cashed}} <small>EUR</small></dd>
+        </dl>
       </div>
-    </header>
+      <div class="right">
+        <dl>
+          <dt>treasury</dt>
+          <dd>{{dashboard.overview.treasury}} <small>EUR</small></dd>
+        </dl>
+        <dl>
+          <dt>estimated gross margin</dt>
+          <dd>{{dashboard.overview.estimatedGrossMargin}} <small>EUR</small></dd>
+        </dl>
+      </div>
+    </div>
     <router-link class="card" to="/worked-days">
       <label>{{dashboard.workedDays}}  <small>DAYS</small></label>
     </router-link>
       <router-link class="card mountain-meadow" to="/expense">
-        <label><span class="red">{{dashboard.expenses.paid}}</span> out of {{dashboard.expenses.count}}</label>
+        <label>{{dashboard.expenses.paid}} out of {{dashboard.expenses.count}}</label>
       </router-link>
     <router-link class="card white-smoke" to="/salary">
       <label>{{dashboard.salaries}} <small>EUR</small></label>
@@ -40,7 +38,7 @@
       <router-link class="card" to="/overtime">
         <label>{{dashboard.overtimes}} <small>EUR</small></label>
       </router-link>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -64,44 +62,24 @@
 </script>
 
 <style lang="scss" scoped>
-  main {
+  .dashboard {
     display: grid;
-    padding: 0;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 42vw 42vw;
     grid-gap: 1px;
-    height: calc(100vh - 57px);
+    height: calc(100% + 2rem);
+    margin: -1rem;
+    position: relative;
+    z-index: 1;
 
-    header {
+    .overview {
       grid-column: 1 / 3;
       background: #2c3e50;
-      position: relative;
-
-      .overview {
-        position: absolute;
-        bottom: 1rem;
-        left: 1rem;
-        right: 1rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 2rem;
-
-        .left {
-          display: grid;
-          grid-template-rows: 1fr 1fr 1fr;
-          grid-gap: 1.2rem;
-        }
-
-        .right {
-          display: grid;
-          grid-template-rows: 1fr 1fr;
-          grid-gap: 1.2rem;
-
-          dd {
-            font-size: 2.2rem;
-          }
-        }
-      }
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 1rem;
+      padding: 1rem;
+      align-items: end;
 
       dt {
         font-size: .6em;
@@ -111,7 +89,23 @@
 
       dd {
         color: #fff;
-        font-size: 1.2em;
+        font-size: 1.5em;
+      }
+
+      .left {
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-gap: 1.5rem;
+      }
+
+      .right {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 1.5rem;
+
+        dd {
+          font-size: 2.5rem;
+        }
       }
     }
 
@@ -120,10 +114,6 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-
-      .red {
-        color: #ea386d;
-      }
 
       label {
         font-size: 1.8rem;

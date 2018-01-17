@@ -1,33 +1,30 @@
 <template>
-  <main :class="{ loading }">
+  <div :class="{ loading }">
+    <h1>List of worked days</h1>
+
     <table>
       <thead>
       <tr>
         <th>Month</th>
         <th>Worked days</th>
-        <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in rows" :key="row.id">
+      <tr v-for="row in rows" :key="row.id" @click="edit(row.id)">
         <td>{{row.month}}</td>
         <td>{{row.workedDays}} days</td>
-        <td><i class="fa fa-pencil-square-o" @click="edit(row.id)"></i></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td>{{months}} months</td>
         <td>{{days}} days<br />{{billed}} euros</td>
-        <td></td>
       </tr>
       </tfoot>
     </table>
 
-    <router-link class="fab" :to="{name: 'nw-worked-days'}">
-      <i class="fa fa-plus"></i>
-    </router-link>
-  </main>
+    <router-link class="fab-new" :to="{name: 'nw-worked-days'}"></router-link>
+  </div>
 </template>
 
 <script>

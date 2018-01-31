@@ -102,12 +102,13 @@ const managementFees = compose(multiply(MANAGEMENT_FEES_RATE), billedWorkedDays,
 const totalCashed = rawData => totalOfSalaries(prop('salaries', rawData)) + totalOfPaidNonBillableExpenses(prop('expenses', rawData));
 const totalTreasury = rawData => totalTurnover(rawData) - totalCashed(rawData) - managementFees(rawData);
 const estimatedGrossMargin = rawData => {
+  const expectedWorkedMonths = 12;
   const paidMonths = compose(length, values, prop('salaries'))(rawData);
-  const remainPaidMonths = 8 - paidMonths;
+  const remainPaidMonths = expectedWorkedMonths - paidMonths;
   const avgSalary = totalOfSalaries(prop('salaries', rawData)) / paidMonths;
 
   const workedMonths = compose(length, values, prop('worked-days'))(rawData);
-  const remainWorkedMonths = 8 - workedMonths;
+  const remainWorkedMonths = expectedWorkedMonths - workedMonths;
   const avgWorkedDays = billedWorkedDays(prop('worked-days', rawData)) / workedMonths;
 
   return totalTreasury(rawData) + ((avgWorkedDays * (1 - MANAGEMENT_FEES_RATE) * remainWorkedMonths) - (avgSalary * remainPaidMonths));

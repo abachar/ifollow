@@ -93,7 +93,7 @@
             amount: parseInt(this.amount),
             paid: this.paid,
             billable: this.billable,
-            receiptUrl: this.receiptUrl
+            receiptUrl: this.receiptUrl 
           })
           .then(() => this.$router.push({name: 'ls-expense'}))
       }
@@ -103,7 +103,7 @@
         db.ref(`/expenses/${this.$route.params.id}`)
           .once('value')
           .then(snapshot => snapshot.val())
-          .then(({reportedAt, label, amount, paid, billable, receiptUrl}) => {
+          .then(({reportedAt, label, amount, paid, billable, receiptUrl = null}) => {
             this.loading = false;
             this.id = this.$route.params.id;
             this.reportedAt = reportedAt;

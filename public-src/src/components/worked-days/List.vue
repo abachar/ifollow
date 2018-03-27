@@ -11,7 +11,7 @@
       </thead>
       <tbody>
       <tr v-for="row in rows" :key="row.id" @click="edit(row.id)">
-        <td>{{row.month}}</td>
+        <td>{{row.formattedMonth}}</td>
         <td>{{row.workedDays}} days</td>
       </tr>
       </tbody>

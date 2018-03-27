@@ -6,21 +6,18 @@
       <thead>
       <tr>
         <th>Month</th>
-        <th>Worked days</th>
         <th>Amount</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="row in rows" :key="row.id" @click="edit(row.id)">
-        <td>{{row.month}}</td>
-        <td>{{row.workedDays}}</td>
+        <td>{{row.formattedMonth}}</td>
         <td>{{row.amount}} euro</td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td></td>
-        <td>{{sumOfWorkedDays}}</td>
         <td>{{sumOfAmounts}} euro</td>
       </tr>
       </tfoot>
@@ -31,7 +28,7 @@
 </template>
 
 <script>
-  import {countOfOvertimeWorkedDays, loadOvertimes, overtimesAsList, formattedTotalOfOvertimeAmount} from "../../functions";
+  import {loadOvertimes, overtimesAsList, formattedTotalOfOvertimeAmount} from "../../functions";
 
   export default {
     data() {
@@ -42,7 +39,6 @@
     },
     computed: {
       rows() { return overtimesAsList(this.overtimes) },
-      sumOfWorkedDays() { return countOfOvertimeWorkedDays(this.overtimes) },
       sumOfAmounts() { return formattedTotalOfOvertimeAmount(this.overtimes) }
     },
     methods: {

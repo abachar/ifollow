@@ -7,12 +7,12 @@
       <input id="month" type="month" v-model="month">
     </div>
     <div class="form-group">
-      <label for="worked-days">Worked days</label>
-      <input id="worked-days" type="number" v-model="workedDays">
+      <label>Amount</label>
+      <input id="amount" type="number" v-model="amount">
     </div>
     <div class="form-group">
-      <label>Amount</label>
-      <p>{{ amount }}</p>
+      <label for="note">Note</label>
+      <textarea id="note" rows="3" v-model="note"></textarea>
     </div>
     <div class="form-btn-group">
       <button @click="cancel">Cancel</button>
@@ -31,7 +31,8 @@
         loading: true,
         id: null,
         month: '',
-        workedDays: ''
+        amount: '',
+        note: ''
       }
     },
     computed: {
@@ -48,8 +49,8 @@
           .child(this.id)
           .set({
             month: this.month,
-            workedDays:  parseInt(this.workedDays),
-            amount: parseInt(this.amount)
+            amount:  parseInt(this.amount),
+            note: this.note
           })
           .then(() => this.$router.push({name: 'ls-overtime'}))
       }
@@ -59,11 +60,12 @@
         db.ref(`/overtimes/${this.$route.params.id}`)
           .once('value')
           .then(snapshot => snapshot.val())
-          .then(({month, workedDays}) => {
+          .then(({month, amount, note}) => {
             this.loading = false;
             this.id = this.$route.params.id;
             this.month = month;
-            this.workedDays = workedDays;
+            this.amount = amount;
+            this.note = note;
           });
       }
       else {

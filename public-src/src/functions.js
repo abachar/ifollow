@@ -4,7 +4,7 @@
  */
 import numeral from 'numeral'
 import moment from 'moment'
-import {and, compose, filter, length, map, multiply, prop, propEq, sort, sum, toPairs, values} from 'ramda'
+import {and, compose, filter, length, map, multiply, prop, propEq, sort, sortBy, sum, toPairs, values} from 'ramda'
 import {db} from './firebase'
 
 // Configure numeral
@@ -24,11 +24,11 @@ export const loadWorkedDays = () => db.ref('/worked-days').once('value').then(sn
 const pairToWorkedDays = ([id, o]) => ({
   id,
   ...o,
-  month: yyyymmm2mmmmyyyy(o.month)
+  formattedMonth: yyyymmm2mmmmyyyy(o.month),
 });
 
 // Convert worked days object to list
-export const workedDaysAsList = compose(map(pairToWorkedDays), toPairs);
+export const workedDaysAsList = compose(sortBy(prop('month')), map(pairToWorkedDays), toPairs);
 
 export const totalWorkedDays = compose(sum, map(prop('workedDays')), values);
 
@@ -42,12 +42,12 @@ export const loadSalaries = () => db.ref('/salaries').once('value').then(snapsho
 const pairToSalary = ([id, s]) => ({
   id,
   ...s,
-  month: yyyymmm2mmmmyyyy(s.month),
+  formattedMonth: yyyymmm2mmmmyyyy(s.month),
   salary: formatAmount(s.salary)
 });
 
 // Convert salaries object to list
-export const salariesAsList = compose(map(pairToSalary), toPairs);
+export const salariesAsList = compose(sortBy(prop('month')), map(pairToSalary), toPairs);
 
 export const totalOfSalaries = compose(sum, map(prop('salary')), values);
 export const formattedTotalOfSalaries = compose(formatAmount, totalOfSalaries);
@@ -59,15 +59,12 @@ export const loadOvertimes = () => db.ref('/overtimes').once('value').then(snaps
 const pairToOvertime = ([id, o]) => ({
   id,
   ...o,
-  month: yyyymmm2mmmmyyyy(o.month),
+  formattedMonth: yyyymmm2mmmmyyyy(o.month),
   amount: formatAmount(o.amount)
 });
 
 // Convert overtimes object to list
-export const overtimesAsList = compose(map(pairToOvertime), toPairs);
-
-export const countOfOvertimeWorkedDays = compose(sum, map(prop('workedDays')), values);
-
+export const overtimesAsList = compose(sortBy(prop('month')), map(pairToOvertime), toPairs);
 export const totalOfOvertimeAmount = compose(sum, map(prop('amount')), values);
 export const formattedTotalOfOvertimeAmount = compose(formatAmount, totalOfOvertimeAmount);
 

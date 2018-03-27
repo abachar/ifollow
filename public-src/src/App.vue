@@ -60,17 +60,6 @@
       font-weight: 500;
       color: #fff;
     }
-
-    /*
-    .new {
-      display: inline-block;
-      height: 24px;
-      width: 24px;
-      position: relative;
-
-
-    }
-    */
   }
 
   main {
@@ -131,7 +120,7 @@
       padding: .4rem 0;
     }
 
-    input {
+    input, textarea {
       font-size: 1rem;
       background: #fff;
       border: 1px solid #1abc9c;

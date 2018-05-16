@@ -2,9 +2,6 @@
   <div class="container">
     <header>
       <router-link to="/">ifollow</router-link>
-      <!-- div class="actions">
-        <a class="new"></a>
-      </div -->
     </header>
     <main>
       <router-view></router-view>

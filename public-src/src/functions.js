@@ -52,23 +52,7 @@ export const salariesAsList = compose(sortBy(prop('month')), map(pairToSalary), 
 export const totalOfSalaries = compose(sum, map(prop('salary')), values);
 export const formattedTotalOfSalaries = compose(formatAmount, totalOfSalaries);
 
-// Load overtimes object
-export const loadOvertimes = () => db.ref('/overtimes').once('value').then(snapshot => snapshot.val());
-
-// Convert overtime pair to object
-const pairToOvertime = ([id, o]) => ({
-  id,
-  ...o,
-  formattedMonth: yyyymmm2mmmmyyyy(o.month),
-  amount: formatAmount(o.amount)
-});
-
-// Convert overtimes object to list
-export const overtimesAsList = compose(sortBy(prop('month')), map(pairToOvertime), toPairs);
-export const totalOfOvertimeAmount = compose(sum, map(prop('amount')), values);
-export const formattedTotalOfOvertimeAmount = compose(formatAmount, totalOfOvertimeAmount);
-
-// Load overtimes object
+// Load expenses object
 export const loadExpenses = () => db.ref('/expenses').once('value').then(snapshot => snapshot.val());
 
 // Convert expenses pair to object
@@ -84,8 +68,10 @@ const compareExpense = (a, b) => moment(a.reportedAt, 'DD/MM/YYYY HH:mm').diff(m
 export const expensesAsList = compose(sort(compareExpense), map(pairToExpense), toPairs);
 
 export const countOfExpenses = compose(length, values);
+export const totalAmountOfExpenses = compose(formatAmount, sum, map(prop('amount')), values);
 
 export const countOfPaidExpenses = compose(length, filter(propEq('paid', true)), values);
+export const amountOfPaidExpenses = compose(formatAmount, sum, map(prop('amount')), filter(propEq('paid', true)), values);
 
 export const totalOfExpenses = compose(formatAmount, sum, map(prop('amount')), values);
 
@@ -94,7 +80,7 @@ export const totalOfPaidExpenses = compose(sum, map(prop('amount')), filter(prop
 export const formattedTotalOfPaidExpenses = compose(formatAmount, totalOfPaidExpenses);
 
 // Calculate the turnover
-const totalTurnover = rawData => billedWorkedDays(prop('worked-days', rawData)) + totalOfOvertimeAmount(prop('overtimes', rawData));
+const totalTurnover = rawData => billedWorkedDays(prop('worked-days', rawData));
 const managementFees = compose(multiply(MANAGEMENT_FEES_RATE), billedWorkedDays, prop('worked-days'));
 const totalCashed = rawData => totalOfSalaries(prop('salaries', rawData)) + totalOfPaidNonBillableExpenses(prop('expenses', rawData));
 const totalTreasury = rawData => totalTurnover(rawData) - totalCashed(rawData) - managementFees(rawData);
@@ -124,9 +110,10 @@ const mapDashboard = rawData => ({
   salaries: totalOfSalaries(rawData.salaries),
   expenses: {
     paid: countOfPaidExpenses(rawData.expenses),
-    count: countOfExpenses(rawData.expenses)
-  },
-  overtimes: totalOfOvertimeAmount(rawData.overtimes)
+    paidAmount: amountOfPaidExpenses(rawData.expenses),
+    count: countOfExpenses(rawData.expenses),
+    totalAmount: totalAmountOfExpenses(rawData.expenses)
+  }
 });
 
 // Load dashboard

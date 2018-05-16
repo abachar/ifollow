@@ -29,15 +29,17 @@
     <router-link class="card" to="/worked-days">
       <label>{{dashboard.workedDays}}  <small>DAYS</small></label>
     </router-link>
-      <router-link class="card mountain-meadow" to="/expense">
-        <label>{{dashboard.expenses.paid}} out of {{dashboard.expenses.count}}</label>
-      </router-link>
-    <router-link class="card white-smoke" to="/salary">
+    <router-link class="card mountain-meadow" to="/salary">
       <label>{{dashboard.salaries}} <small>EUR</small></label>
     </router-link>
-      <router-link class="card" to="/overtime">
-        <label>{{dashboard.overtimes}} <small>EUR</small></label>
-      </router-link>
+    <router-link class="card card-large white-smoke" to="/expense">
+      <label>
+        {{dashboard.expenses.paid}} <small>out of</small> {{dashboard.expenses.count}}
+      </label>
+      <label>
+        {{dashboard.expenses.paidAmount}} <small>out of</small> {{dashboard.expenses.totalAmount}} <small>EUR</small>
+      </label>
+    </router-link>
   </div>
 </template>
 
@@ -114,6 +116,10 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
+      &.card-large {
+        grid-column: 1 / 3;
+      }
 
       label {
         font-size: 1.8rem;

@@ -9,8 +9,6 @@ import FormExpense from './components/expense/Form.vue';
 import ListOfExpenses from './components/expense/List.vue';
 import FormSalary from './components/salary/Form.vue';
 import ListOfSalaries from './components/salary/List.vue';
-import FormOvertime from './components/overtime/Form.vue';
-import ListOfOvertimes from './components/overtime/List.vue';
 
 // Sign in with a pop-up window
 firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
@@ -31,10 +29,7 @@ firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
         { name: 'ls-expense'    , path: '/expense'        , component: ListOfExpenses   },
         { name: 'nw-salary'     , path: '/salary/new'     , component: FormSalary       },
         { name: 'ed-salary'     , path: '/salary/:id'     , component: FormSalary       },
-        { name: 'ls-salary'     , path: '/salary'         , component: ListOfSalaries   },
-        { name: 'nw-overtime'   , path: '/overtime/new'   , component: FormOvertime     },
-        { name: 'ed-overtime'   , path: '/overtime/:id'   , component: FormOvertime     },
-        { name: 'ls-overtime'   , path: '/overtime'       , component: ListOfOvertimes  }
+        { name: 'ls-salary'     , path: '/salary'         , component: ListOfSalaries   }
       ]
     });
 

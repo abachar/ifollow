@@ -24,6 +24,7 @@
 <script>
   import {db} from '../../firebase'
   import uuid from 'uuid-v4'
+  import moment from 'moment'
 
   export default {
     data() {
@@ -36,7 +37,15 @@
     },
     computed: {
       amount() {
-        return this.workedDays * 750
+        const y = moment(this.month).year();
+        const m = moment(this.month).month();
+        let tjm;
+
+        if (y <= 2018 && m < 6) { tjm = 750}
+        else if (y === 2018 && m === 6) { tjm = 775 }
+        else { tjm = 860 }
+
+        return this.workedDays * tjm
       }
     },
     methods: {
